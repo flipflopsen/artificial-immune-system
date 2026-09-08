@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+[project]
+name = "artificial-immune-system"
+version = "0.1.0"
+description = "A modular agent-based and population-based artificial immune system simulator"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Philip Weber" }
+]
+dependencies = [
+    "numpy>=2.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.9",
+    "mypy>=1.14"
+]
+
+[project.scripts]
+ais-simulate = "ais.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ais"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["ais"]
