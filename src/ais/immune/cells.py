@@ -17,7 +17,7 @@ class Macrophage(ImmuneCell):
     lifespan_h: ClassVar[float] = 24.0 * 60.0
     mobility_h: ClassVar[float] = 0.02
 
-    def act(self, simulation: "Simulation", dt_h: float) -> None:
+    def act(self, simulation: Simulation, dt_h: float) -> None:
         local_burden = simulation.total_pathogen_load(self.location)
         self.activate(saturation(local_burden, 1.0e4), dt_h)
 
@@ -53,7 +53,7 @@ class Neutrophil(ImmuneCell):
     lifespan_h: ClassVar[float] = 72.0
     mobility_h: ClassVar[float] = 0.35
 
-    def act(self, simulation: "Simulation", dt_h: float) -> None:
+    def act(self, simulation: Simulation, dt_h: float) -> None:
         local_burden = simulation.total_pathogen_load(self.location)
         inflammatory_signal = simulation.signal(self.location, "pro-inflammatory")
 
@@ -88,7 +88,7 @@ class DendriticCell(ImmuneCell):
     lifespan_h: ClassVar[float] = 24.0 * 14.0
     mobility_h: ClassVar[float] = 0.08
 
-    def act(self, simulation: "Simulation", dt_h: float) -> None:
+    def act(self, simulation: Simulation, dt_h: float) -> None:
         burden = simulation.total_pathogen_load(self.location)
         self.activate(saturation(burden, 1.0e3), dt_h)
 
@@ -103,8 +103,7 @@ class DendriticCell(ImmuneCell):
                 * dt_h
             )
             simulation.antigen_presentation[species.name] = (
-                simulation.antigen_presentation.get(species.name, 0.0)
-                + presentation
+                simulation.antigen_presentation.get(species.name, 0.0) + presentation
             )
 
 
@@ -113,7 +112,7 @@ class NaturalKillerCell(ImmuneCell):
     lifespan_h: ClassVar[float] = 24.0 * 14.0
     mobility_h: ClassVar[float] = 0.15
 
-    def act(self, simulation: "Simulation", dt_h: float) -> None:
+    def act(self, simulation: Simulation, dt_h: float) -> None:
         compartment = simulation.environment.get(self.location)
         stimulus = saturation(compartment.infected_cells, 100.0)
         self.activate(stimulus, dt_h)
@@ -138,7 +137,7 @@ class CytotoxicTCell(ImmuneCell):
     lifespan_h: ClassVar[float] = 24.0 * 365.0
     mobility_h: ClassVar[float] = 0.18
 
-    def act(self, simulation: "Simulation", dt_h: float) -> None:
+    def act(self, simulation: Simulation, dt_h: float) -> None:
         local_viral_memory = 0.0
 
         for species, _ in simulation.pathogens_at(self.location):
@@ -164,7 +163,7 @@ class BCell(ImmuneCell):
     lifespan_h: ClassVar[float] = 24.0 * 365.0
     mobility_h: ClassVar[float] = 0.08
 
-    def act(self, simulation: "Simulation", dt_h: float) -> None:
+    def act(self, simulation: Simulation, dt_h: float) -> None:
         strongest_presentation = max(
             simulation.antigen_presentation.values(),
             default=0.0,
@@ -172,12 +171,7 @@ class BCell(ImmuneCell):
         self.activate(saturation(strongest_presentation, 5.0), dt_h)
 
         for species_name, presentation in simulation.antigen_presentation.items():
-            production = (
-                0.25
-                * self.activation
-                * saturation(presentation, 5.0)
-                * dt_h
-            )
+            production = 0.25 * self.activation * saturation(presentation, 5.0) * dt_h
             simulation.antibodies[species_name] = (
                 simulation.antibodies.get(species_name, 0.0) + production
             )

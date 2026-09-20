@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from collections.abc import Iterable
 from dataclasses import asdict
 from math import exp
-from typing import Any, Iterable
+from typing import Any
 
 import numpy as np
 
@@ -63,9 +64,7 @@ class Simulation:
         if model is None:
             raise ValueError(f"Unknown pathogen model: {species.model!r}")
         if model.supported_kind is not species.kind:
-            raise ValueError(
-                f"Model {species.model!r} does not support {species.kind.value!r}"
-            )
+            raise ValueError(f"Model {species.model!r} does not support {species.kind.value!r}")
 
         self.species[species.name] = species
 
@@ -247,9 +246,7 @@ class Simulation:
                 for name, compartment in self.environment.compartments.items()
             },
             "immune_cells": {
-                cell_type: sum(
-                    1 for cell in self.cells.values() if cell.cell_type == cell_type
-                )
+                cell_type: sum(1 for cell in self.cells.values() if cell.cell_type == cell_type)
                 for cell_type in sorted({cell.cell_type for cell in self.cells.values()})
             },
             "antigen_presentation": dict(self.antigen_presentation),
@@ -383,9 +380,9 @@ class Simulation:
                 inflammatory_signal / (inflammatory_signal + 100.0),
             )
 
-            compartment.inflammation += (
-                target_inflammation - compartment.inflammation
-            ) * min(1.0, 0.5 * dt_h)
+            compartment.inflammation += (target_inflammation - compartment.inflammation) * min(
+                1.0, 0.5 * dt_h
+            )
             compartment.inflammation = min(
                 1.0,
                 max(0.0, compartment.inflammation),
@@ -394,9 +391,7 @@ class Simulation:
             damage_rate = 0.002 * compartment.inflammation
             recovery_rate = 0.0005 * (1.0 - compartment.inflammation)
 
-            compartment.health += (
-                recovery_rate * (1.0 - compartment.health) - damage_rate
-            ) * dt_h
+            compartment.health += (recovery_rate * (1.0 - compartment.health) - damage_rate) * dt_h
             compartment.health = min(1.0, max(0.0, compartment.health))
 
     def _decay_systemic_state(self, dt_h: float) -> None:

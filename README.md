@@ -47,24 +47,43 @@ output must therefore not be interpreted as medical prediction.
 
 ```text
 artificial-immune-system/
-├── pyproject.toml
-├── README.md
-├── README_EXAMPLES.md
-├── src/
-│   └── ais/
-│       ├── __init__.py
-│       ├── environment.py
-│       ├── models.py
-│       ├── pathogens.py
-│       ├── simulation.py
-│       ├── scenarios.py
-│       ├── cli.py
-│       └── immune/
-│           ├── __init__.py
-│           ├── base.py
-│           └── cells.py
-└── tests/
-    └── test_simulation.py
+│   .gitattributes
+│   .gitignore
+│   .python-version
+│   LICENSE
+│   pyproject.toml
+│   README.md
+│   README_EXTENDING.md
+│   uv.lock
+│
+├───config
+│       ais.yaml
+│       ais_bacteria.yaml
+│       ais_virus.yaml
+│
+├───src
+│   │   main.py
+│   │   __init__.py
+│   │
+│   ├───ais
+│   │   │   environment.py
+│   │   │   models.py
+│   │   │   pathogens.py
+│   │   │   scenarios.py
+│   │   │   simulation.py
+│   │   │   __init__.py
+│   │   │
+│   │   └───immune
+│   │           base.py
+│   │           cells.py
+│   │           __init__.py
+│   │
+│   └───utils
+│           config_parser.py
+│           __init__.py
+│
+└───tests
+        test_simulation.py
 ```
 
 ## Requirements
@@ -76,33 +95,36 @@ artificial-immune-system/
 
 Install a `uv`-managed Python 3.11 interpreter and pin it for the project:
 
-```bash
+```
 uv python install 3.11
 uv python pin 3.11
 ```
 
-Create the virtual environment and synchronize all runtime and development
-dependencies:
-
-```bash
-uv venv --python 3.11 .venv
-uv sync --extra dev
-```
-
-The explicit `uv venv` step is optional because `uv sync` creates the project
+The explicit `uv venv` step is optional because `uv sync --all-groups` should create the projects
 environment when necessary. The minimal setup is therefore:
 
-```bash
-uv python install 3.11
-uv python pin 3.11
-uv sync --extra dev
+```
+uv venv --python 3.11 .venv
+uv sync
+```
+
+For extending/developing I you should synchronize all runtime, development and testing
+dependencies:
+
+```
+uv sync --all-groups
 ```
 
 Verify the interpreter and installation:
 
-```bash
+```
 uv run python --version
-uv run pytest
+```
+
+Run the basic simulation:
+
+```
+uv run ais-simulate
 ```
 
 Manual activation is normally unnecessary because `uv run` executes commands
@@ -117,39 +139,33 @@ source .venv/bin/activate
 On Windows PowerShell:
 
 ```powershell
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
-## Testing and static analysis
+## Run a Simulation
 
-Run the test suite:
+**How to run it?**
+The standard way of running it is executing `uv run ais-simulate`.
+With this command it uses the config file `ais.yaml`.
 
-```bash
-uv run pytest
-```
+**Run it with custom config files**
+In this case you need to provide the `--config` argument and the path to your config file:
+`uv run ais-simulate --config "./config/ais_virus.yaml"`
 
-Run linting and formatting checks:
+## Run the Tests
 
-```bash
-uv run ruff check .
-uv run ruff format --check .
-```
+Run the complete test suite with:
+`uv run pytest`
 
-Run static type analysis:
+Run a specific test module with:
+`uv run pytest tests/test_simulation.py`
 
-```bash
-uv run mypy
-```
+Run with coverage reporting:
+`uv run pytest --cov=ais --cov-report=term-missing`
 
-Apply automatic formatting:
+## Extension documentation
 
-```bash
-uv run ruff format .
-```
-
-## Usage and extension documentation
-
-See [`README_EXAMPLES.md`](README_EXAMPLES.md) for:
+See [`README_EXTENDING.md`](README_EXTENDING.md) for:
 
 - bacterial and viral infection examples;
 - programmatic simulation control;
