@@ -100,8 +100,10 @@ uv python install 3.11
 uv python pin 3.11
 ```
 
-The explicit `uv venv` step is optional because `uv sync --all-groups` should create the projects
-environment when necessary. The minimal setup is therefore:
+The explicit `uv venv` step is optional because `uv sync`, or `uv sync --all-groups` respectively, should create the virtual
+environment in case it's not already present. 
+
+The minimal setup is therefore:
 
 ```
 uv venv --python 3.11 .venv
