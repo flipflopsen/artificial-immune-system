@@ -1,7 +1,7 @@
 from ais.immune.base import ImmuneCell
 from ais.immune.cells import (
-    BCell,
     CELL_TYPES,
+    BCell,
     CytotoxicTCell,
     DendriticCell,
     Macrophage,

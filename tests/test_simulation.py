@@ -54,9 +54,7 @@ def test_injection_registers_species_and_population(
 
     simulation.inject(bacterium, 1_000.0, location="blood")
 
-    assert simulation.pathogen_load("blood", bacterium.name) == pytest.approx(
-        1_000.0
-    )
+    assert simulation.pathogen_load("blood", bacterium.name) == pytest.approx(1_000.0)
 
 
 def test_bacteria_grow_without_immune_response(

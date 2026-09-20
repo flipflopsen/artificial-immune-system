@@ -1,0 +1,9 @@
+simulation:
+  seed: 42
+  duration_h: 72.0
+  dt_h: 0.1
+
+pathogen:
+  type: virus
+  amount: 100000.0
+  location: blood
