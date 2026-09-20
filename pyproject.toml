@@ -1,6 +1,7 @@
 [build-system]
 requires = ["hatchling>=1.26"]
 build-backend = "hatchling.build"
+
 [project]
 name = "artificial-immune-system"
 version = "0.1.0"
@@ -9,33 +10,42 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [
-    { name = "Philip Weber" }
+    { name = "Philip Weber" },
 ]
 dependencies = [
-    "numpy>=2.0"
+    "numpy>=2.0",
+    "pyyaml>=6.0.3",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
+    "mypy>=1.14",
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.9",
-    "mypy>=1.14"
 ]
 
 [project.scripts]
-ais-simulate = "ais.cli:main"
+ais-simulate = "main:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ais"]
+only-include = [
+    "src/ais",
+    "src/utils",
+    "src/main.py",
+]
+
+sources = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["src/tests"]
+testpaths = ["tests"]
 addopts = "-q"
+pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
@@ -43,4 +53,8 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.11"
 strict = true
-packages = ["ais"]
+mypy_path = "src"
+files = [
+    "src",
+    "tests",
+]
