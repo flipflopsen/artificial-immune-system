@@ -152,6 +152,7 @@ With this command it uses the config file `ais.yaml`.
 
 **Run it with custom config files**
 In this case you need to provide the `--config` argument and the path to your config file:
+
 `uv run ais-simulate --config "./config/ais_virus.yaml"`
 
 ## Run the Tests
@@ -160,9 +161,11 @@ Run the complete test suite with:
 `uv run pytest`
 
 Run a specific test module with:
+
 `uv run pytest tests/test_simulation.py`
 
 Run with coverage reporting:
+
 `uv run pytest --cov=ais --cov-report=term-missing`
 
 ## Extension documentation
